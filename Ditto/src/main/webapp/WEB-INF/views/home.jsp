@@ -183,5 +183,12 @@ for(Deeds deed : deedList){	%>
 <%	}
 }%>
 
+<%if(request.getAttribute("exceptionToken")!=null){%>
+<script type="text/javascript">
+	alert("<%=request.getAttribute("exceptionToken") %>");
+</script>
+<%}%>
+
+
 </body>
 </html>

@@ -49,8 +49,11 @@ public class HomeController {
 			@RequestParam(value="u_name") String u_name,@RequestParam(value="u_pass") String u_pass) {
 		ModelAndView mnv = new ModelAndView("home");
 		Dto_Users userFresh = userService.getUser(u_name, u_pass);
+		if(d_deed.isEmpty()||d_deed==null) {
+			mnv.addObject("exceptionToken","Empty Deed, Write any Deed to post.");
+		}else {
 		 deedService.createDeed(d_deed,userFresh.getU_name(),userFresh.getName());
-
+		}
 		//adding a fresh deed to the page without any user linked to it.
 		
 		mnv.addObject("user", userFresh);
@@ -74,6 +77,9 @@ public class HomeController {
 			
 			mnv.addObject("user", user);
 		}
+		else {
+			mnv.addObject("exceptionToken","Invalid User Id Or Password, Try Again..!!");
+		}
 		mnv.addObject("deedList", deedService.getAllDeeds());
 		
 		return mnv;
@@ -84,9 +90,14 @@ public class HomeController {
 	public ModelAndView signupRead(@RequestParam(value="u_name") String u_name,@RequestParam(value="name") String name,
 			@RequestParam(value="u_pass") String u_pass) {
 		ModelAndView mnv = new ModelAndView("home");
+		if((name.isEmpty()||name==null)||(u_pass.isEmpty()||u_pass==null)||(u_name.isEmpty()||u_name==null)) {
+			mnv.addObject("exceptionToken","Please fill the signUp form properly, Try Again..");
+			mnv.addObject("signupToken", "yes");
+		}else {
 		Dto_Users new_user = userService.createUser(name, u_name, u_pass);
-		
 		mnv.addObject("user",new_user);
+		}
+		
 		mnv.addObject("deedList", deedService.getAllDeeds());
 		
 		return mnv;
@@ -131,9 +142,11 @@ public class HomeController {
 	public ModelAndView editDeedHere(@RequestParam(value="u_name") String u_name,
 			@RequestParam(value="d_id") int d_id,@RequestParam(value="edit_deed") String edit_deed) {
 		ModelAndView mnv = new ModelAndView("home");
-		
+		if(edit_deed.isEmpty()||edit_deed==null) {
+			mnv.addObject("exceptionToken","Empty Deed, Write any Deed to post.");
+		}else {
 		deedService.editDeed(d_id, edit_deed);
-		
+		}
 		mnv.addObject("user", userService.getUserById(u_name));
 		mnv.addObject("deedList",deedService.getAllDeeds());
 		return mnv;
