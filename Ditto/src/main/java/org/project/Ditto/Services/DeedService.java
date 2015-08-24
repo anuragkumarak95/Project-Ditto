@@ -21,19 +21,19 @@ public class DeedService {
 	} 
 	
 	@Transactional
-	public Deeds createDeed(String d_deed,int d_user_id) {
+	public Deeds createDeed(String d_deed,String d_user_name) {
 		Deeds deed = new Deeds();
 		deed.setD_deed(d_deed);
-		deed.setD_user_id(d_user_id);
+		deed.setD_user_name(d_user_name);
 		this.sessionFactory.getCurrentSession().save(deed);
 		
 		return deed;
 	}
 	
 	@Transactional
-	public void linkDeed(int d_id,int d_user_id) {
+	public void linkDeed(int d_id,String d_user_name) {
 		Deeds deed = getDeedByID(d_id);
-		deed.setD_user_id(d_user_id);
+		deed.setD_user_name(d_user_name);
 		this.sessionFactory.getCurrentSession().update(deed);
 	}
 	

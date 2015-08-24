@@ -1,3 +1,4 @@
+<%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="org.project.Ditto.Services.UsersService"%>
 <%@page import="org.project.Ditto.Services.DeedService"%>
@@ -11,6 +12,32 @@
 	<title>Ditto - What you did silly today?</title>
 </head>
 <style type="text/css">
+/* disabling color change in ancho texts.. */
+	a {
+	text-decoration: none !important;
+	color:#FFF;}      /* unvisited link */
+a:visited {color:#FFF;}  /* visited link */
+a:hover {color:#FFF;}  /* mouse over link */
+a:active {color:#FFF;}
+
+/* postField customizations */
+	.postField{
+		width: auto;
+		margin: 5px;
+		
+		background-color: #b9f6ca;
+	}
+	.postButton{
+		color: window;
+		background-color: #00e676;
+		border-color #00e676;
+		
+		padding: 5px;
+		box-shadow: 0 3px 6px 0 #fff, 0 -3px 6px 0 #fff;
+	}
+	
+	/* NavBar Customizations */
+
 .bar{
 	position: fixed;
 	 
@@ -29,7 +56,7 @@
 .bar:hover{
 	text-indent: 150px;
 }
-
+/*  Deed Tiles Customizations */
 .tile {
 	
 	  width: 98.5%;
@@ -63,7 +90,7 @@
 	color: #fff;
 }
 
-  .purple, .blue, .red, .orange, .green {
+ .green {
     color: #000;
 			 }
 
@@ -80,76 +107,58 @@
 </style>
 
 <body style="margin : 0px;">
-<div class="bar">Ditto
-	<div style="float: right; font-size:x-large; padding-right: 50px; padding-top: 5px;" >SignUp</div>
-</div>
-
-<%-- <h1>
-	Hello world!  
-</h1>
-
-<P>  The time on the server is ${serverTime}. </P> --%>
-
-<br /><br /><br />
+<div class="bar"><a href="/Ditto">Ditto</a>
+	
 <% 	Dto_Users user =(Dto_Users) request.getAttribute("user");
-		
-	if(user != null){
+	// looking for any available loginned users..
+	if(user != null ){
 	System.out.println("[home] got user");
-	Cookie userCookie = new Cookie("u_name",user.getU_name());
-	response.addCookie(userCookie);
-	userCookie = new Cookie("u_pass",user.getU_pass());
-	response.addCookie(userCookie);
-	%>
-		<%@ include file="postExtension.jsp" %>	
-<%} else{%>
-		<%@ include file="loginExtension.jsp" %>
-<%}%>
 
-<%-- <%Deeds freshDeed = (Deeds)request.getAttribute("deed");
-	if(freshDeed != null){
-		System.out.println("got some deed here, "+freshDeed.getD_deed());
-		Cookie[] cookies =  request.getCookies();
-		String u_name=null,u_pass=null;
-		for(Cookie cook : cookies){
-			if(cook.getName().toString().equals("u_name")){
-				u_name = cook.getValue().toString();
-				System.out.println("got name here, "+u_name);
-			}
-			else if(cook.getName().toString().equals("u_pass")){
-				u_pass = cook.getValue().toString();
-				System.out.println("got pass here, "+u_pass);
-			}
-		}
-		if(u_name != null && u_pass != null){
-			UsersService servu = new UsersService();
-			Dto_Users freshU = servu.getUser(u_name, u_pass);
-			System.out.println("freshU id here :"+freshU.getU_id());
-			DeedService servd = new DeedService();
-			servd.linkDeed(freshDeed.getD_id(), freshU.getU_id());
-			System.out.println("deed link successfull..");
-		}
+	%><div style="float: right; font-size:x-large; padding-right: 50px; padding-top: 5px;" >
+	<a href="/Ditto/logoutUser">Logout</a>
+	</div>
+</div>
+<br /><br /><br />
+		<fieldset class="postField" >
+	<form action="/Ditto/postDeed" method="post">
+		What Silly you did today ?<br><br>
+		<input type="text" value="<%=user.getU_name() %>" name="u_name" readonly="readonly" />
+		<input type="password" value="<%=user.getU_pass() %>" name="u_pass" readonly="readonly" />
+		<textarea style="width: 95%;" type="text" name="deed" placeHolder="Your silly deed here." ></textarea>
+		<br><br><input class="postButton" type="submit" value="Post">
+	</form>
+	
+</fieldset>
+<%}
+	else if(request.getAttribute("signupToken") != null){%>
 		
-	}
-%> --%>
+</div>
+<br /><br /><br />
+		<%@ include file="signupExtension.jsp" %>
+	<%}
+	
+	else{%><div style="float: right; font-size:x-large; padding-right: 50px; padding-top: 5px;" >
+	<a href="/Ditto/signUpUser">SignUp</a>	
+	</div>
+</div>
+<br /><br /><br />
+		<%@ include file="loginExtension.jsp" %>
+<%}
 
-<%
+	
+	// loading the deeds list from the Database here...
 List<Deeds> deedList = (List<Deeds>)request.getAttribute("deedList");
 if(deedList != null){
-for(Deeds deed : deedList){
-	System.out.println("[home-deed] ids "+deed.getD_user_id());
-	 Dto_Users deed_user = (Dto_Users) new UsersService().getUserById(deed.getD_user_id()); 
-	 
-	%>
+for(Deeds deed : deedList){	%>
 	<div class="tile green">
 	<h3 class="title"><%=deed.getD_deed() %> </h3>
-	<div class="down">by : <%=deed_user.getU_name() %></div> 	
-	<br>aur kya??
+	<div class="down">by :<%=deed.getD_user_name() %></div> 	
+	<br><% if(user != null){%>
+	<a href="/Ditto/dittoMe?d_id=<%=deed.getD_id() %>&u_name=<%=user.getU_name() %>">
+	Ditto Me</a><%} %>  <div style="float: right;">Dittos : <%=deed.getD_ditto_count() %></div>
 </div>
-	<% 
-}
-}
-%>
-
+<%	}
+}%>
 
 </body>
 </html>

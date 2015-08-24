@@ -9,25 +9,26 @@ import javax.persistence.Id;
 @Entity
 public class Dto_Users {
 	
-	@Id @GeneratedValue(strategy=GenerationType.AUTO)
-	private int u_id;
-	
+	@Id
 	private String u_name;
-	
+
 	private String u_pass;
-
 	
+	private String name;
+		
 	// getters and setters..
-	public int getU_id() {
-		return u_id;
-	}
 
-	public void setU_id(int u_id) {
-		this.u_id = u_id;
-	}
 
 	public String getU_name() {
 		return u_name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public void setU_name(String u_name) {

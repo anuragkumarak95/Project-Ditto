@@ -12,7 +12,7 @@ public class Deeds {
 	
 	private String d_deed;
 	
-	private int d_user_id;
+	private String d_user_name;
 	
 	private int d_ditto_count;
 
@@ -32,12 +32,12 @@ public class Deeds {
 		this.d_deed = d_deed;
 	}
 
-	public int getD_user_id() {
-		return d_user_id;
+	public String getD_user_name() {
+		return d_user_name;
 	}
 
-	public void setD_user_id(int d_user_id) {
-		this.d_user_id = d_user_id;
+	public void setD_user_name(String d_user_name) {
+		this.d_user_name = d_user_name;
 	}
 
 	public int getD_ditto_count() {

@@ -1,6 +1,7 @@
 package org.project.Ditto;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -19,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -32,18 +34,25 @@ public class HomeController {
 	@Autowired
 	private DeedService deedService;
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	@RequestMapping(value="logoutUser")
+	public ModelAndView UserLogout() {
+		ModelAndView mnv = new ModelAndView("home");
+		mnv.addObject("deedList", deedService.getAllDeeds());
+		return mnv;
+	}
 	
 	@RequestMapping(value="/postDeed",method=RequestMethod.POST)
 	public ModelAndView postDeedHere(@RequestParam(value="deed") String d_deed,
 			@RequestParam(value="u_name") String u_name,@RequestParam(value="u_pass") String u_pass) {
 		ModelAndView mnv = new ModelAndView("home");
 		Dto_Users userFresh = userService.getUser(u_name, u_pass);
-		Deeds freshDeed = deedService.createDeed(d_deed,userFresh.getU_id());
+		 deedService.createDeed(d_deed,userFresh.getName());
+
 		//adding a fresh deed to the page without any user linked to it.
-		mnv.addObject("deed",freshDeed);
+		
 		mnv.addObject("user", userFresh);
 		mnv.addObject("deedList", deedService.getAllDeeds());
+		
 	
 		
 		return mnv;
@@ -53,13 +62,47 @@ public class HomeController {
 	public ModelAndView loginRead(@RequestParam(value="u_name") String u_name,
 			@RequestParam(value="u_pass") String u_pass) {
 		ModelAndView mnv = new ModelAndView("home");
-		System.err.println(u_name+" || "+u_pass);
 		if(userService.searchUser(u_name, u_pass)) {
+			
 			Dto_Users user = userService.getUser(u_name, u_pass);
+			System.err.println("[lginEx]search complete :"+user.getName()+" logged in.");
+			
 			mnv.addObject("user", user);
 		}
 		mnv.addObject("deedList", deedService.getAllDeeds());
 		
+		return mnv;
+	}
+	
+	@RequestMapping(value="/signupEx", method= RequestMethod.POST)
+	public ModelAndView signupRead(@RequestParam(value="u_name") String u_name,@RequestParam(value="name") String name,
+			@RequestParam(value="u_pass") String u_pass) {
+		ModelAndView mnv = new ModelAndView("home");
+		Dto_Users new_user = userService.createUser(name, u_name, u_pass);
+		
+		mnv.addObject("user",new_user);
+		mnv.addObject("deedList", deedService.getAllDeeds());
+		
+		return mnv;
+	}
+	
+	@RequestMapping(value="/signUpUser")
+	public ModelAndView signUpUser() {
+		ModelAndView mnv = new ModelAndView("home");
+		mnv.addObject("signupToken","yes");
+		mnv.addObject("deedList", deedService.getAllDeeds());
+		return mnv;
+	}
+	
+	@RequestMapping(value="/dittoMe")
+	public ModelAndView dittoMe(@RequestParam(value="d_id") int d_id,
+			@RequestParam(value="u_name") String u_name) {
+		ModelAndView mnv = new ModelAndView("home");
+		
+		Deeds deed = deedService.getDeedByID(d_id);
+		deedService.incDitto(deed);
+		mnv.addObject("user",userService.getUserById(u_name));
+		mnv.addObject("deedList", deedService.getAllDeeds());
 		return mnv;
 	}
 	
@@ -68,7 +111,7 @@ public class HomeController {
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView home() {
-		/*logger.info("Welcome home! The client locale is {}.", locale);*/
+		
 		
 		/*
 		 * testing codes here.. 
@@ -100,12 +143,7 @@ public class HomeController {
 		
 		mnv.addObject("deedList", deedService.getAllDeeds());
 		
-/*		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-		String formattedDate = dateFormat.format(date);
-		mnv.addObject("serverTime", formattedDate );*/
-		
-		/*model.addAttribute("deeds", deedsList);*/
+
 		
 		return mnv;
 	}

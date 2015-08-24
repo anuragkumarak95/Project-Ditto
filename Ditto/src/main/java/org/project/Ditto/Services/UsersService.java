@@ -16,9 +16,10 @@ public class UsersService {
 	private SessionFactory sessionFactory;
 	
 	@Transactional
-	public Dto_Users createUser(String u_name,String u_pass) {
+	public Dto_Users createUser(String name,String u_name,String u_pass) {
 		
 		Dto_Users user = new Dto_Users();
+		user.setName(name);
 		user.setU_name(u_name);
 		user.setU_pass(u_pass);
 		this.sessionFactory.getCurrentSession().save(user);
@@ -31,7 +32,7 @@ public class UsersService {
 				.add(Restrictions.eq("u_name", u_name)).add(Restrictions.eq("u_pass",u_pass)).uniqueResult();
 		
 		if(user != null) {
-			System.err.println(user.getU_id()+" :: "+user.getU_name());
+			System.err.println(user.getName()+" :: "+user.getU_name());
 			return true;
 		}
 		else {
@@ -55,7 +56,7 @@ public class UsersService {
 	}
 	
 	@Transactional
-	public Dto_Users getUserById(int u_id) {
+	public Dto_Users getUserById(String u_id) {
 		System.out.println(u_id);
 		return (Dto_Users)this.sessionFactory.getCurrentSession().get(Dto_Users.class, u_id);
 	}
