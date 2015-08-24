@@ -12,6 +12,8 @@
 	<title>Ditto - What you did silly today?</title>
 </head>
 <style type="text/css">
+
+
 /* disabling color change in ancho texts.. */
 	a {
 	text-decoration: none !important;
@@ -45,7 +47,7 @@ a:active {color:#FFF;}
 	height: 45px;
 	overflow: hidden;
 	color : window;
-	text-indent: 50px;
+	text-indent: 100px;
 	font-size : xx-large;
 	background-color: #00695c;
 	transition: all 0.3s ease 0s;
@@ -53,9 +55,9 @@ a:active {color:#FFF;}
 }
 
 
-.bar:hover{
+ .bar:hover{
 	text-indent: 150px;
-}
+} 
 /*  Deed Tiles Customizations */
 .tile {
 	
@@ -107,7 +109,7 @@ a:active {color:#FFF;}
 </style>
 
 <body style="margin : 0px;">
-<div class="bar"><a href="/Ditto">Ditto</a>
+<div class="bar"><a style={width=10px;} href="/Ditto">Ditto</a>
 	
 <% 	Dto_Users user =(Dto_Users) request.getAttribute("user");
 	// looking for any available loginned users..
@@ -165,13 +167,15 @@ if(deedList != null){
 for(Deeds deed : deedList){	%>
 	<div class="tile green">
 	<h3 class="title"><%=deed.getD_deed() %> </h3>
-	<div class="down">by :<%=deed.getD_user_name() %></div> 	
+	<div class="down">by :<%=deed.getD_user_name() %></div> 
+	
 	<br><% if(user != null){%>
 	<a href="/Ditto/dittoMe?d_id=<%=deed.getD_id() %>&u_name=<%=user.getU_name() %>">
 	Ditto Me</a><%
 	if(user.getU_name().equals(deed.getD_user_id())){
 		%>
 		 &emsp;<a href="/Ditto/editDeed?d_id=<%=deed.getD_id() %>&u_name=<%=user.getU_name() %>">Edit Deed</a>
+		 &emsp;<a href="/Ditto/deleteDeed?d_id=<%=deed.getD_id() %>&u_name=<%=user.getU_name() %>">Delete Deed</a>
 		<%
 	}
 	}%>  <div style="float: right;">Dittos : <%=deed.getD_ditto_count() %></div>

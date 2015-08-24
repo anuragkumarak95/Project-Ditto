@@ -138,6 +138,17 @@ public class HomeController {
 		mnv.addObject("deedList",deedService.getAllDeeds());
 		return mnv;
 	}
+
+	//editing of a present deed token generator controller.
+	@RequestMapping(value="/deleteDeed",method=RequestMethod.GET)
+	public ModelAndView deleteDeed(@RequestParam(value="d_id") int d_id,@RequestParam(value="u_name") String u_name) {
+		ModelAndView mnv = new ModelAndView("home");
+		
+		deedService.deleteDeed(deedService.getDeedByID(d_id));		
+		mnv.addObject("user", userService.getUserById(u_name));
+		mnv.addObject("deedList",deedService.getAllDeeds());
+		return mnv;
+	} 
 	
 	/**
 	 * Simply selects the home view to render by returning its name.
