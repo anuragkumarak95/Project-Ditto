@@ -32,7 +32,6 @@ public class UsersService {
 				.add(Restrictions.eq("u_name", u_name)).add(Restrictions.eq("u_pass",u_pass)).uniqueResult();
 		
 		if(user != null) {
-			System.err.println(user.getName()+" :: "+user.getU_name());
 			return true;
 		}
 		else {
@@ -47,7 +46,7 @@ public class UsersService {
 		
 		for(Dto_Users user : userlist) {
 			if(user.getU_name().equals(u_name)&&user.getU_pass().equals(u_pass)) {
-				System.err.println("got the user");
+				System.err.println("[getUser-service] user traverse positive");
 				return user;
 			}
 		}

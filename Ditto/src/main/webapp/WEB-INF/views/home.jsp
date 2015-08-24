@@ -119,17 +119,30 @@ a:active {color:#FFF;}
 	</div>
 </div>
 <br /><br /><br />
+
+		<%if(request.getAttribute("editDeed") != null && request.getAttribute("d_deed") != null){%>
 		<fieldset class="postField" >
-	<form action="/Ditto/postDeed" method="post">
-		What Silly you did today ?<br><br>
-		<input type="text" value="<%=user.getU_name() %>" name="u_name" readonly="readonly" />
-		<input type="password" value="<%=user.getU_pass() %>" name="u_pass" readonly="readonly" />
-		<textarea style="width: 95%;" type="text" name="deed" placeHolder="Your silly deed here." ></textarea>
-		<br><br><input class="postButton" type="submit" value="Post">
-	</form>
-	
-</fieldset>
+			<form action="/Ditto/editDeed" method="post">
+				Edit Your Deed<br><br>
+				<input type="text" value="<%=user.getU_name() %>" name="u_name" readonly="readonly" />
+				<input type="password" value="<%=request.getAttribute("editDeed") %>" name="d_id" readonly="readonly" />
+				<textarea style="width: 95%;" type="text" name="edit_deed" placeHolder="<%=request.getAttribute("d_deed") %>" ></textarea>
+				<br><br><input class="postButton" type="submit" value="Post">
+			</form>	
+		</fieldset>
+		<%}else{ %>
+		<fieldset class="postField" >
+			<form action="/Ditto/postDeed" method="post">
+				What Silly you did today ?<br><br>
+				<input type="text" value="<%=user.getU_name() %>" name="u_name" readonly="readonly" />
+				<input type="password" value="<%=user.getU_pass() %>" name="u_pass" readonly="readonly" />
+				<textarea style="width: 95%;" type="text" name="deed" placeHolder="Your silly deed here." ></textarea>
+				<br><br><input class="postButton" type="submit" value="Post">
+			</form>
+		</fieldset>
 <%}
+
+		}
 	else if(request.getAttribute("signupToken") != null){%>
 		
 </div>
@@ -155,7 +168,13 @@ for(Deeds deed : deedList){	%>
 	<div class="down">by :<%=deed.getD_user_name() %></div> 	
 	<br><% if(user != null){%>
 	<a href="/Ditto/dittoMe?d_id=<%=deed.getD_id() %>&u_name=<%=user.getU_name() %>">
-	Ditto Me</a><%} %>  <div style="float: right;">Dittos : <%=deed.getD_ditto_count() %></div>
+	Ditto Me</a><%
+	if(user.getU_name().equals(deed.getD_user_id())){
+		%>
+		 &emsp;<a href="/Ditto/editDeed?d_id=<%=deed.getD_id() %>&u_name=<%=user.getU_name() %>">Edit Deed</a>
+		<%
+	}
+	}%>  <div style="float: right;">Dittos : <%=deed.getD_ditto_count() %></div>
 </div>
 <%	}
 }%>

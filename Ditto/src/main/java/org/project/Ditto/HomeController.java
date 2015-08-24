@@ -28,12 +28,14 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller
 public class HomeController {
-	
+	// Autowired variables by the help of Spring Framework.
 	@Autowired
 	private UsersService userService;
 	@Autowired
 	private DeedService deedService;
 	
+	
+	//user Logout option controller.
 	@RequestMapping(value="logoutUser")
 	public ModelAndView UserLogout() {
 		ModelAndView mnv = new ModelAndView("home");
@@ -41,12 +43,13 @@ public class HomeController {
 		return mnv;
 	}
 	
+	// New Deed post and save into Db controller
 	@RequestMapping(value="/postDeed",method=RequestMethod.POST)
 	public ModelAndView postDeedHere(@RequestParam(value="deed") String d_deed,
 			@RequestParam(value="u_name") String u_name,@RequestParam(value="u_pass") String u_pass) {
 		ModelAndView mnv = new ModelAndView("home");
 		Dto_Users userFresh = userService.getUser(u_name, u_pass);
-		 deedService.createDeed(d_deed,userFresh.getName());
+		 deedService.createDeed(d_deed,userFresh.getU_name(),userFresh.getName());
 
 		//adding a fresh deed to the page without any user linked to it.
 		
@@ -58,6 +61,8 @@ public class HomeController {
 		return mnv;
 	}
 	
+	
+	// traversing and checking for true user and returning to logined page, controller.
 	@RequestMapping(value="/loginEx", method= RequestMethod.POST)
 	public ModelAndView loginRead(@RequestParam(value="u_name") String u_name,
 			@RequestParam(value="u_pass") String u_pass) {
@@ -74,6 +79,7 @@ public class HomeController {
 		return mnv;
 	}
 	
+	// sighUp of new user execution and updation in Db controller.
 	@RequestMapping(value="/signupEx", method= RequestMethod.POST)
 	public ModelAndView signupRead(@RequestParam(value="u_name") String u_name,@RequestParam(value="name") String name,
 			@RequestParam(value="u_pass") String u_pass) {
@@ -86,6 +92,7 @@ public class HomeController {
 		return mnv;
 	}
 	
+	// token generator for signUp layout to appear on page controller.
 	@RequestMapping(value="/signUpUser")
 	public ModelAndView signUpUser() {
 		ModelAndView mnv = new ModelAndView("home");
@@ -94,6 +101,7 @@ public class HomeController {
 		return mnv;
 	}
 	
+	// incrementing the ditto count of the deed selected and updation in Db controller.
 	@RequestMapping(value="/dittoMe")
 	public ModelAndView dittoMe(@RequestParam(value="d_id") int d_id,
 			@RequestParam(value="u_name") String u_name) {
@@ -106,15 +114,41 @@ public class HomeController {
 		return mnv;
 	}
 	
+	//editing of a present deed token generator controller.
+	@RequestMapping(value="/editDeed",method=RequestMethod.GET)
+	public ModelAndView editDeedToken(@RequestParam(value="d_id") int d_id,@RequestParam(value="u_name") String u_name) {
+		ModelAndView mnv = new ModelAndView("home");
+
+		mnv.addObject("editDeed", d_id);
+		mnv.addObject("d_deed", deedService.getDeedByID(d_id).getD_deed());
+		mnv.addObject("user", userService.getUserById(u_name));
+		mnv.addObject("deedList",deedService.getAllDeeds());
+		return mnv;
+	} 
+	
+	// editing of the deed execution and Db updation controller.
+	@RequestMapping(value="/editDeed",method=RequestMethod.POST)
+	public ModelAndView editDeedHere(@RequestParam(value="u_name") String u_name,
+			@RequestParam(value="d_id") int d_id,@RequestParam(value="edit_deed") String edit_deed) {
+		ModelAndView mnv = new ModelAndView("home");
+		
+		deedService.editDeed(d_id, edit_deed);
+		
+		mnv.addObject("user", userService.getUserById(u_name));
+		mnv.addObject("deedList",deedService.getAllDeeds());
+		return mnv;
+	}
+	
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
+	//base home page loader, without any extra feeds.
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView home() {
 		
 		
 		/*
-		 * testing codes here.. 
+		 * Service and Db connectivity through hibernte testing codes here.. 
 		 * 
 		 * 
 		 * userService.createUser("Anurag", "Kumar");

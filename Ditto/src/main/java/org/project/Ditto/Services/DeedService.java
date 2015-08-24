@@ -21,9 +21,10 @@ public class DeedService {
 	} 
 	
 	@Transactional
-	public Deeds createDeed(String d_deed,String d_user_name) {
+	public Deeds createDeed(String d_deed,String d_user_id,String d_user_name) {
 		Deeds deed = new Deeds();
 		deed.setD_deed(d_deed);
+		deed.setD_user_id(d_user_id);
 		deed.setD_user_name(d_user_name);
 		this.sessionFactory.getCurrentSession().save(deed);
 		
@@ -57,7 +58,6 @@ public class DeedService {
 	@Transactional
 	public void editDeed(int d_id,String d_deed) {
 		Deeds deed = (Deeds) this.sessionFactory.getCurrentSession().get(Deeds.class, d_id);
-		System.err.println(deed.getD_deed());
 		deed.setD_deed(d_deed);
 		this.sessionFactory.getCurrentSession().update(deed);
 	}

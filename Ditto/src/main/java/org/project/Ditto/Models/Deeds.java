@@ -12,9 +12,21 @@ public class Deeds {
 	
 	private String d_deed;
 	
+	private String d_user_id;
+	
 	private String d_user_name;
 	
 	private int d_ditto_count;
+	
+	//getters and setters....
+
+	public String getD_user_id() {
+		return d_user_id;
+	}
+
+	public void setD_user_id(String d_user_id) {
+		this.d_user_id = d_user_id;
+	}
 
 	public int getD_id() {
 		return d_id;
