@@ -123,9 +123,9 @@ a:active {color:#FFF;}
 <br /><br /><br />
 
 		<%if(request.getAttribute("editDeed") != null && request.getAttribute("d_deed") != null){%>
-		<fieldset class="postField" >
+		<fieldset class="postField" ><legend>Edit Past Deed</legend>
 			<form action="/Ditto/editDeed" method="post">
-				Edit Your Deed<br><br>
+				<br /><br />Edit Your Deed<br><br>
 				<input type="text" value="<%=user.getU_name() %>" name="u_name" readonly="readonly" />
 				<input type="password" value="<%=request.getAttribute("editDeed") %>" name="d_id" readonly="readonly" />
 				<textarea style="width: 95%;" type="text" name="edit_deed" placeHolder="<%=request.getAttribute("d_deed") %>" ></textarea>
@@ -133,11 +133,10 @@ a:active {color:#FFF;}
 			</form>	
 		</fieldset>
 		<%}else{ %>
-		<fieldset class="postField" >
+		<fieldset class="postField" ><legend>Post Deed</legend>
 			<form action="/Ditto/postDeed" method="post">
-				What Silly you did today ?<br><br>
-				<input type="text" value="<%=user.getU_name() %>" name="u_name" readonly="readonly" />
-				<input type="password" value="<%=user.getU_pass() %>" name="u_pass" readonly="readonly" />
+				<br><br>
+				Hi ,<input type="text" value="<%=user.getU_name() %>" name="u_name" readonly="readonly" /> &emsp;What Silly you did today ?<br /><br />
 				<textarea style="width: 95%;" type="text" name="deed" placeHolder="Your silly deed here." ></textarea>
 				<br><br><input class="postButton" type="submit" value="Post">
 			</form>

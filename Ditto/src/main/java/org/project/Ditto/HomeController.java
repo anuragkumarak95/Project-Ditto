@@ -46,9 +46,9 @@ public class HomeController {
 	// New Deed post and save into Db controller
 	@RequestMapping(value="/postDeed",method=RequestMethod.POST)
 	public ModelAndView postDeedHere(@RequestParam(value="deed") String d_deed,
-			@RequestParam(value="u_name") String u_name,@RequestParam(value="u_pass") String u_pass) {
+			@RequestParam(value="u_name") String u_name) {
 		ModelAndView mnv = new ModelAndView("home");
-		Dto_Users userFresh = userService.getUser(u_name, u_pass);
+		Dto_Users userFresh = userService.getUserById(u_name);
 		if(d_deed.isEmpty()||d_deed==null) {
 			mnv.addObject("exceptionToken","Empty Deed, Write any Deed to post.");
 		}else {
@@ -144,6 +144,8 @@ public class HomeController {
 		ModelAndView mnv = new ModelAndView("home");
 		if(edit_deed.isEmpty()||edit_deed==null) {
 			mnv.addObject("exceptionToken","Empty Deed, Write any Deed to post.");
+			mnv.addObject("editDeed", d_id);
+			mnv.addObject("d_deed", deedService.getDeedByID(d_id).getD_deed());
 		}else {
 		deedService.editDeed(d_id, edit_deed);
 		}
